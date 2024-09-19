@@ -110,44 +110,60 @@ def display_hangman(tries):
     ]
     return stages[tries]
 
-def play(word):
+def play():
+    word = get_word()
     word_completion = ['_'] * len(word)
     guessed_letters = []
     tries = 6
     guessed = False
     
-    print("Let's start the game!")
-    print(' '.join(word_completion))
-    print(display_hangman(tries))
-    
-    while not guessed and tries > 0:
-        letter_try = input("Guess a letter: ").upper()
-        
-        if len(letter_try) != 1 or not letter_try.isalpha():
-            print("Please enter a single letter.")
-            continue
-        
-        if letter_try in guessed_letters:
-            print("You've already guessed that letter.")
-            continue
-        
-        if letter_try in word:
-            for index, letter in enumerate(word):
-                if letter == letter_try:
-                    word_completion[index] = letter_try
-            if '_' not in word_completion:
-                guessed = True
-                print("Congratulations! You've guessed the word.")
-        else:
-            guessed_letters.append(letter_try)
-            tries -= 1
-            print(f"Wrong guess. You have {tries} tries left.")
-        
-        print(display_hangman(tries))
+    while True:
+        print("Let's start the game!")
         print(' '.join(word_completion))
+        print(display_hangman(tries))
         
-    if not guessed:
-        print(f"You've run out of tries. The word was '{word}'.")
+        while not guessed and tries > 0:
+            letter_try = input("Guess a letter: ").upper()
+            
+            if len(letter_try) != 1 or not letter_try.isalpha():
+                print("Please enter a single letter.")
+                continue
+            
+            if letter_try in guessed_letters:
+                print("You've already guessed that letter.")
+                continue
+            
+            if letter_try in word:
+                for index, letter in enumerate(word):
+                    if letter == letter_try:
+                        word_completion[index] = letter_try
+                if '_' not in word_completion:
+                    guessed = True
+                    print("Congratulations! You've guessed the word.")
+            else:
+                guessed_letters.append(letter_try)
+                tries -= 1
+                print(f"Wrong guess. You have {tries} tries left.")
+            
+            print(display_hangman(tries))
+            print(' '.join(word_completion))
+            
+        if guessed:
+            print('Do you want to play again? - yes/no')
+        else:
+            print(f"You've run out of tries. The word was '{word}'.")
+            print('Do you want to play again? - yes/no')
+        
+        answer = input().lower()
+        if answer == 'yes':
+            word = get_word()  
+            word_completion = ['_'] * len(word)
+            guessed_letters = []
+            tries = 6
+            guessed = False
+        else:
+            print('Thank you for the game!')
+            break
 
-word = get_word()
-play(word)
+play()
+
