@@ -1,4 +1,5 @@
 import random
+
 word_list = [
     # Animals
     "alligator", "antelope", "baboon", "butterfly", "cheetah", "crocodile", "dolphin", 
@@ -39,82 +40,114 @@ word_list = [
 ]
 
 def get_word():
-  word = random.choice(word_list)
-  return word.upper()
+    return random.choice(word_list).upper()
 
 def display_hangman(tries):
-    stages = [  # финальное состояние: голова, торс, обе руки, обе ноги
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |     \\|/
-                   |      |
-                   |     / \\
-                   -
-                ''',
-                # голова, торс, обе руки, одна нога
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |     \\|/
-                   |      |
-                   |     / 
-                   -
-                ''',
-                # голова, торс, обе руки
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |     \\|/
-                   |      |
-                   |      
-                   -
-                ''',
-                # голова, торс и одна рука
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |     \\|
-                   |      |
-                   |     
-                   -
-                ''',
-                # голова и торс
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |      |
-                   |      |
-                   |     
-                   -
-                ''',
-                # голова
-                '''
-                   --------
-                   |      |
-                   |      O
-                   |    
-                   |      
-                   |     
-                   -
-                ''',
-                # начальное состояние
-                '''
-                   --------
-                   |      |
-                   |      
-                   |    
-                   |      
-                   |     
-                   -
-                '''
+    stages = [  
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |     / \\
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |     / 
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |      
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|
+           |      |
+           |     
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      O
+           |      |
+           |      |
+           |     
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      O
+           |    
+           |      
+           |     
+           -
+        ''',
+        '''
+           --------
+           |      |
+           |      
+           |    
+           |      
+           |     
+           -
+        '''
     ]
     return stages[tries]
 
+def play(word):
+    word_completion = ['_'] * len(word)
+    guessed_letters = []
+    tries = 6
+    guessed = False
+    
+    print("Let's start the game!")
+    print(' '.join(word_completion))
+    print(display_hangman(tries))
+    
+    while not guessed and tries > 0:
+        letter_try = input("Guess a letter: ").upper()
+        
+        if len(letter_try) != 1 or not letter_try.isalpha():
+            print("Please enter a single letter.")
+            continue
+        
+        if letter_try in guessed_letters:
+            print("You've already guessed that letter.")
+            continue
+        
+        if letter_try in word:
+            for index, letter in enumerate(word):
+                if letter == letter_try:
+                    word_completion[index] = letter_try
+            if '_' not in word_completion:
+                guessed = True
+                print("Congratulations! You've guessed the word.")
+        else:
+            guessed_letters.append(letter_try)
+            tries -= 1
+            print(f"Wrong guess. You have {tries} tries left.")
+        
+        print(display_hangman(tries))
+        print(' '.join(word_completion))
+        
+    if not guessed:
+        print(f"You've run out of tries. The word was '{word}'.")
 
-get_word()
+word = get_word()
+play(word)
